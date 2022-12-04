@@ -1,6 +1,3 @@
 # while loop
-n=0
-
-while n<=10:
+for n in range(11):
     print(n)
-    n=n+1

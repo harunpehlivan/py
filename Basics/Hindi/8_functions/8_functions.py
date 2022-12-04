@@ -2,14 +2,10 @@
 bharat_expenses = [20,30,45]
 bilal_expenses = [45,67,34]
 
-total=0
-for item in bharat_expenses:
-    total+=item
+total = sum(bharat_expenses)
 print("Bharat's total:",total)
 
-total=0
-for item in bilal_expenses:
-    total+=item
+total = sum(bilal_expenses)
 print("Bilal's total:",total)
 
 # Calculate expense sum for two lists by using a function
@@ -19,10 +15,7 @@ def find_total(exp):
     :param exp: input list
     :return: total sum
     '''
-    total=0
-    for item in exp:
-        total+=item
-    return total
+    return sum(exp)
 
 bharat_total=find_total(bharat_expenses)
 print("Bharat's total:",bharat_total)
@@ -39,8 +32,7 @@ print(help(find_total))
 def cylinder_volume(radius,height=1):
     print("radius is:",radius)
     print("height is:",height)
-    area = 3.14*(radius**2)*height
-    return area
+    return 3.14*(radius**2)*height
 
 r=5
 h=10

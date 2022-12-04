@@ -8,7 +8,7 @@ if n%2==0:
 else:
     print("Number is odd")
 
-	
+
 # Show the execution by debugging
 # If is called control statement as it controls the flow of code execution
 
@@ -41,7 +41,7 @@ elif dish in bangladesi:
     print(f"{dish} is bangladesi")
 else:
     print(f"Based on my limited knowledge, I don't know which cuisine is {dish}")
-	
+
 
 # Ternary operator
 print("Ternary operator demo")

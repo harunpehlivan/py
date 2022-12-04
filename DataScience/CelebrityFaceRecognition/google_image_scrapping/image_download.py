@@ -29,9 +29,11 @@ def fetch_image_urls_util(url,driver_path):
 
         thumbnail_results = wd.find_elements_by_css_selector("img[class ='irc_mi']")
 
-        for img in thumbnail_results:
-            if img.get_attribute('src') and 'http' in img.get_attribute('src'):
-                images.append(img.get_attribute('src'))
+        images.extend(
+            img.get_attribute('src')
+            for img in thumbnail_results
+            if img.get_attribute('src') and 'http' in img.get_attribute('src')
+        )
 
     return images
 
@@ -42,7 +44,7 @@ def fetch_image_urls(query:str, max_links_to_fetch:int, wd, sleep_between_intera
     def scroll_to_end(wd):
         wd.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         time.sleep(sleep_between_interactions)    
-    
+
     # build the google query
     search_url = "https://www.google.com/search?safe=off&site=&tbm=isch&source=hp&q={q}&oq={q}&gs_l=img"
 
@@ -61,9 +63,9 @@ def fetch_image_urls(query:str, max_links_to_fetch:int, wd, sleep_between_intera
         # get all image thumbnail results
         thumbnail_results = wd.find_elements_by_css_selector("img.Q4LuWd")
         number_results = len(thumbnail_results)
-        
+
         print(f"Found: {number_results} search results. Extracting links from {results_start}:{number_results}")
-        
+
         for img in thumbnail_results[50:number_results]:
             # try to click every thumbnail such that we can get the real image behind it
             try:
@@ -72,7 +74,7 @@ def fetch_image_urls(query:str, max_links_to_fetch:int, wd, sleep_between_intera
             except Exception as e:
                 print(e)
                 continue
-            
+
             links = wd.find_elements_by_css_selector("a[jsname='sTFXNd']")
 
             for link in links:
@@ -84,7 +86,7 @@ def fetch_image_urls(query:str, max_links_to_fetch:int, wd, sleep_between_intera
                         if imageurl is not None:
                             #print(imageurl)
                             image_urls.add(imageurl)
-            
+
             image_count2 = len(image_urls)
             print(image_count2)
             if image_count2 >= max_links_to_fetch/10:
@@ -98,7 +100,7 @@ def fetch_image_urls(query:str, max_links_to_fetch:int, wd, sleep_between_intera
                 d = {}
 
             image_count += image_count2
-                
+
         #image_count = len(image_urls)
 
         if len(image_urls) >= max_links_to_fetch:
@@ -108,10 +110,6 @@ def fetch_image_urls(query:str, max_links_to_fetch:int, wd, sleep_between_intera
             print("Found:", len(image_urls), "image links, looking for more ...")
             time.sleep(30)
             return
-            load_more_button = wd.find_element_by_css_selector(".mye4qd")
-            if load_more_button:
-                wd.execute_script("document.querySelector('.mye4qd').click();")
-
         # move the result startpoint further down
         results_start = image_count
 
@@ -130,7 +128,10 @@ def persist_image(folder_path:str,url:str):
     try:
         image_file = io.BytesIO(image_content)
         image = Image.open(image_file).convert('RGB')
-        file_path = os.path.join(folder_path,hashlib.sha1(image_content).hexdigest()[:10] + '.jpg')
+        file_path = os.path.join(
+            folder_path, f'{hashlib.sha1(image_content).hexdigest()[:10]}.jpg'
+        )
+
         with open(file_path, 'wb') as f:
             image.save(f, "JPEG", quality=85)
         print(f"SUCCESS - saved {url} - as {file_path}")

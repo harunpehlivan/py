@@ -10,14 +10,13 @@ class Fibonacci:
         return self
 
     def __next__(self):
-        if self.n < self.limit:
-            result = self.previous + self.current
-            self.previous = self.current
-            self.current = result
-            self.n += 1
-            return result
-        else:
+        if self.n >= self.limit:
             raise StopIteration
+        result = self.previous + self.current
+        self.previous = self.current
+        self.current = result
+        self.n += 1
+        return result
 
 
 # init the fib_iterator

@@ -40,8 +40,5 @@ for i in range(11):
         continue
     print(i)
 
-# while loop
-num=0
-while num<=10:
+for num in range(11):
     print(num)
-    num=num+1
